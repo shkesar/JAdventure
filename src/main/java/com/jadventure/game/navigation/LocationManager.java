@@ -16,11 +16,9 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Cage
- * Date: 23/11/13
- * Time: 10:51 PM
- * To change this template use File | Settings | File Templates.
+ * LocationManager loads the location map as a collection of locations
+ *
+ * The start location is (0, 0, -1)
  */
 public class LocationManager {
     private static final String FILE_NAME = "json/locations.json";

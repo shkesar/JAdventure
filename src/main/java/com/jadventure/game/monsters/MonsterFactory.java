@@ -34,7 +34,7 @@ public class MonsterFactory {
         else if (randomInt == 1)
         	return new Troll(playerLevel);
         else
-        	return new Goblin(playerLevel);
+        	return new Goblin(playerLevel); // more goblins 2/4 chance
     }
     
     private Monster getSwampMonster(int playerLevel) {

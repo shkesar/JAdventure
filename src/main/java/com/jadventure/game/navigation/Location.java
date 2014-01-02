@@ -65,6 +65,7 @@ public class Location implements ILocation {
         this.locationType = locationType;
     }
 
+    // the surrounding locations the player can move to
     public Map<Direction, ILocation> getExits() {
         Map<Direction, ILocation> exits = new HashMap<Direction, ILocation>();
         ILocation borderingLocation;

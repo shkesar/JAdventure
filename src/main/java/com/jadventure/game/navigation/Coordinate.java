@@ -1,5 +1,8 @@
 package com.jadventure.game.navigation;
 
+/**
+ * For indexing the location
+ */
 public class Coordinate {
     public final int x;
     public final int y;

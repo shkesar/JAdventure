@@ -2,6 +2,9 @@ package com.jadventure.game.classes;
 
 import com.jadventure.game.entities.Player;
 
+/**
+ * Recruit is more powerful compared to the SewerRat
+ */
 public class Recruit extends Player {
 
     public Recruit() {
