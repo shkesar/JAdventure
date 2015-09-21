@@ -9,14 +9,10 @@ public class Client {
     DataInputStream in;
     DataOutputStream out;
 
-    public Client() {
-        String serverName = "localhost";
-        Scanner query;
-        query = new Scanner(System.in);
-        
-        int port = 4044;
+    public Client(String serverName, int port) {
+        Socket client = null;
         try {
-            Socket client = new Socket(serverName, port);
+            client = new Socket(serverName, port);
             
             in = new DataInputStream(client.getInputStream());
             out = new DataOutputStream(client.getOutputStream());
@@ -50,15 +46,24 @@ public class Client {
             }
         } catch(IOException e) {
             e.printStackTrace();
+        } finally {
+        	try {
+				client.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
         }
     }
 
     public void getInput() {
-        Scanner input = new Scanner(System.in);
-        String userInput = input.next();
-        try {
-            out.writeUTF(userInput);
-        } catch (IOException e) { e.printStackTrace(); }
+         Scanner input;
+         try {
+             input = new Scanner(System.in);
+             String userInput = input.nextLine();
+             out.writeUTF(userInput);
+         } catch (IOException e) {
+             e.printStackTrace(); 
+         } 
     }
 }
 

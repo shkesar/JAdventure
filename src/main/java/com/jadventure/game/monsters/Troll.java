@@ -11,7 +11,11 @@ public class Troll extends Monster {
 		this.setArmour(playerLevel + 12);
 		this.setDamage(20 + playerLevel * 3);
 		this.setCritChance(0.05);
-        this.setXPGain(75 + playerLevel * 3);
+                this.setIntelligence(1);
+                this.setStealth(1);
+                this.setDexterity(1);
+                this.setXPGain(75 + playerLevel * 3);
 		this.setGold(25 + playerLevel * 10);
+                addRandomItems(playerLevel, "wbrd1", "ashi1", "pmil2");
 	}
 }

@@ -1,67 +1,93 @@
 {
   "items": {
     "empty": {
+      "type": "weapon",
       "name": "empty",
       "description": "",
+      "position": "rightHand",
+      "level": 1,
       "properties": {
         "health": "0",
         "value": "0"
       }
     },
-    "tlap1": {
-      "name": "lock and pick",
-      "description": "tools to pick locks",
+    "hands": {
+      "type": "weapon",
+      "name": "hands",
+      "description": "they look quite strong",
       "position": "rightHand",
+      "level": 1,
       "properties": {
-        "value": "20",
-        "weight": "1"
+        "damage": "1"
       }
     },
-    "fmil1": {
-      "name": "milk",
-      "description": "some delicious milk",
+    "fbrd1": {
+      "type": "food",
+      "name": "bread",
+      "description": "small piece of bread",
       "position": "mouth",
-      "properties": {	
-        "health": "+5",
-        "weight": "1",
+      "level": 1,
+      "properties": {
+        "health": "+20",
         "value": "10"
       }
     },
-    "fmil2": {
-      "name": "super milk",
-      "description": "this milk must have come from a super cow because it is extra delicious milk",
+    "pmil1": {
+      "type": "potion",
+      "name": "milk",
+      "description": "some delicious milk",
       "position": "mouth",
+      "level": 1,
       "properties": {
-	
-        "health": "+15",
+        "healthMax": "+0",
+        "health": "+5",
         "weight": "1",
-        "value": "25"
-      }
-    },
-    "fram1": {
-      "name": "raw meat",
-      "description": "some delicious raw meat",
-      "position": "mouth",
-      "properties": {
-        "health": "+2",
-        "weight": "2",
         "value": "5"
       }
     },
+    "pmil2": {
+      "type": "potion",
+      "name": "super milk",
+      "description": "this milk must have come from a super cow because it is extra delicious milk",
+      "position": "mouth",
+      "level": 2,
+      "properties": {
+        "healthMax": "+0",
+        "health": "+25",
+        "weight": "1",
+        "value": "20"
+      }
+    },
+    "fram1": {
+      "type": "food",
+      "name": "raw meat",
+      "description": "some delicious raw meat",
+      "position": "mouth",
+      "level": 1,
+      "properties": {
+        "health": "+7",
+        "weight": "2",
+        "value": "3"
+      }
+    },
     "fcom1": {
+      "type": "food",
       "name": "cooked meat",
       "description": "some delicious cooked meat",
       "position": "mouth",
+      "level": 1,
       "properties": {
-        "health": "+10",
+        "health": "+13",
         "weight": "2",
-        "value": "15"
+        "value": "10"
       }
     },
     "fbum1": {
+      "type": "food",
       "name": "burnt meat",
       "description": "some crispy burnt meat",
       "position": "mouth",
+      "level": 1,
       "properties": {
         "health": "+4",
         "weight": "2",
@@ -69,9 +95,11 @@
       }
     },
     "wshi1": {
+      "type": "weapon",
       "name": "shiv",
       "description": "a small dagger",
       "position": "rightHand",
+      "level": 1,
       "properties": {
         "damage": "+3",
         "weight": "2",
@@ -79,9 +107,11 @@
       }
     },
     "wdag1": {
+      "type": "weapon",
       "name": "dagger",
       "description": "a basic dagger",
       "position": "rightHand",
+      "level": 1,
       "properties": {
         "damage": "+5",
         "weight": "1",
@@ -89,9 +119,11 @@
       }
     },
     "wshs1": {
+      "type": "weapon",
       "name": "shortsword",
       "description": "a basic shortsword",
       "position": "rightHand",
+      "level": 1,
       "properties": {
         "damage": "+7",
         "weight": "5",
@@ -99,9 +131,11 @@
       }
     },
     "wspe1": {
+      "type": "weapon",
       "name": "spear",
       "description": "a basic spear",
       "position": "rightHand",
+      "level": 1,
       "properties": {
         "damage": "+5",
         "weight": "4",
@@ -109,19 +143,23 @@
       }
     },
     "wbrd1": {
+      "type": "weapon",
       "name": "broadsword",
       "description": "a two handed broadsword",
-      "position": "twoHand",
+      "position": "bothHands",
+      "level": 1,
       "properties": {
         "damage": "+10",
         "weight": "4",
         "value": "50"
-     }
+      }
     },
     "ashi1": {
+      "type": "armour",
       "name": "wooden shield",
       "description": "a wooden shield, watch out for splinters!",
-      "position": "rightHand",
+      "position": "leftHand",
+      "level": 1,
       "properties": {
         "armour": "+3",
         "weight": "4",
@@ -129,9 +167,11 @@
       }
     },
     "arhl1": {
+      "type": "armour",
       "name": "rusted helmet",
       "description": "a rusted helmet, it will do for now",
       "position": "head",
+      "level": 1,
       "properties": {
         "armour": "+4",
         "weight": "3",
@@ -139,9 +179,11 @@
       }
     },
     "albr1": {
+      "type": "armour",
       "name": "leather breastplate",
-      "description": "a leather breastplate. It will do for now",
+      "description": "a leather breastplate, it will do for now",
       "position": "chest",
+      "level": 1,
       "properties": {
         "armour": "+5",
         "weight": "10",
@@ -149,44 +191,76 @@
       }
     },
     "agre1": {
+      "type": "armour",
       "name": "leather greaves",
       "description": "a pair of leather greaves",
       "position": "legs",
+      "level": 1,
       "properties": {
-	 "armour": "+2",
-	 "weight": "4",
-	 "value": "30"
+        "armour": "+2",
+        "weight": "4",
+        "value": "30"
       }
     },
     "albt1": {
+      "type": "armour",
       "name": "leather boots",
       "description": "a pair of leather boots, it will do for now",
       "position": "feet",
+      "level": 1,
       "properties": {
         "armour": "+2",
         "weight": "10",
         "value": "50"
       }
     },
-   "algt1": {
-      "name": "leather gauntlet",
-      "description": "a leather gaunlet, it will do for now",
-      "position": "arms",
+    "algt1": {
+      "type": "armour",
+      "name": "leather gauntlets",
+      "description": "leather gaunlets, they will do for now",
+      "position": "bothArms",
+      "level": 1,
       "properties": {
         "armour": "+3",
         "weight": "10",
         "value": "50"
       }
     },
-   "phli1": {
-     "name": "Potion of Health",
-     "description": "Magic potion that increases vitality",
+    "albr1": {
+      "type": "armour",
+      "name": "leather arm brace",
+      "description": "a leather arm brace, like the gladiators of old would wear",
+      "position": "rightArm",
+      "level": 1,
+      "properties": {
+        "armour": "+2",
+        "weight": "5",
+        "value": "30"
+      }
+    },
+    "tlap1": {
+      "type": "tool",
+      "name": "lock and pick",
+      "description": "tools to pick locks",
+      "position": "rightHand",
+      "level": 1,
+      "properties": {
+        "value": "20",
+        "weight": "1"
+      }
+    },
+    "phli1": {
+      "type": "potion",
+      "name": "Potion of Health",
+      "description": "Magic potion that increases vitality",
       "position": "mouth",
-     "properties": {
-       "healthMax": "+5",
-       "weight": "1",
-       "value": "100"
-     }
-   }
+      "level": 1,
+      "properties": {
+        "healthMax": "+100",
+        "health": "+0",
+        "weight": "1",
+        "value": "50"
+      }
+    }
   }
 }

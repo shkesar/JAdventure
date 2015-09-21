@@ -1,10 +1,9 @@
 package com.jadventure.game;
 
-import com.jadventure.game.entities.Entity;
 import com.jadventure.game.entities.Player;
 import com.jadventure.game.monsters.Monster;
 import com.jadventure.game.monsters.MonsterFactory;
-import com.jadventure.game.navigation.LocationManager;
+import com.jadventure.game.repository.LocationRepository;
 import com.jadventure.game.prompts.CommandParser;
 
 import java.util.ArrayList;
@@ -23,30 +22,35 @@ public class Game {
     public Game(Player player, String playerType) throws DeathException {
           this.parser = new CommandParser(player);
           this.player = player;
-          this.player.setLocation(LocationManager.INSTANCE.getInitialLocation());
-          if (playerType.equals("new")) { // New Game
-              newGameStart(player);
-          } else if (playerType.equals("old")) {
-              QueueProvider.offer("Welcome back, " + player.getName() + "!");
-              QueueProvider.offer("");
-              player.getLocation().print();
-              gamePrompt(player);
-          } else {
-              QueueProvider.offer("Invalid player type");
+          switch (playerType) {
+              case "new":
+                  newGameStart(player);
+                  break;
+              case "old":
+                  QueueProvider.offer("Welcome back, " + player.getName() + "!");
+                  QueueProvider.offer("");
+                  player.getLocation().print();
+                  gamePrompt(player);
+                  break;
+              default:
+                  QueueProvider.offer("Invalid player type");
+                  break;
           }
     }
    
     /**
      * Starts a new game.
-     * It prints the intro first and asks for the name of the player's character
-     * and welcomes him/her. After that, it goes to the normal game prompt.
+     * It prints the introduction text first and asks for the name of the player's
+     * character and welcomes him / her. After that, it goes to the normal game prompt.
      */
     public void newGameStart(Player player) throws DeathException {
         QueueProvider.offer(player.getIntro());
         String userInput = QueueProvider.take();
         player.setName(userInput);
+        LocationRepository locationRepo = GameBeans.getLocationRepository(player.getName());
+        this.player.setLocation(locationRepo.getInitialLocation());
+        player.save();
         QueueProvider.offer("Welcome to Silliya, " + player.getName() + ".");
-        QueueProvider.offer("");
         player.getLocation().print();
         gamePrompt(player);
     }
@@ -61,9 +65,9 @@ public class Game {
         boolean continuePrompt = true;
         try {
             while (continuePrompt) {
-                QueueProvider.offer("Prompt:");
+                QueueProvider.offer("\nPrompt:");
                 String command = QueueProvider.take().toLowerCase();
-                continuePrompt = parser.parse(player, command, continuePrompt);
+                continuePrompt = parser.parse(player, command);
             }
         } catch (DeathException e) {
             if (e.getLocalisedMessage().equals("replay")) {

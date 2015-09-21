@@ -1,31 +1,30 @@
 package com.jadventure.game.menus;
 
-import com.jadventure.game.menus.Menus;
-
-import com.jadventure.game.Game;
-import com.jadventure.game.entities.Player;
-import com.jadventure.game.menus.ChooseClassMenu;
-import com.jadventure.game.DeathException;
-import com.jadventure.game.QueueProvider;
-
-import java.io.IOException;
-import java.nio.file.Files;
 import java.io.File;
-import java.nio.file.Paths;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
+import java.io.IOException;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+
+import com.jadventure.game.DeathException;
+import com.jadventure.game.Game;
+import com.jadventure.game.GameModeType;
+import com.jadventure.game.JAdventure;
+import com.jadventure.game.QueueProvider;
+import com.jadventure.game.entities.Player;
 
 /**
- * The first menu diplayed on user screen
+ * The first menu displayed on user screen
  * @see JAdventure
  * This menu lets the player choose whether to load an exiting game,
  * start a new one, or exit to the terminal.
  */
 public class MainMenu extends Menus implements Runnable {
      
-    public MainMenu(Socket server,String mode){
-        new QueueProvider().startMessenger(server,mode);
+    public MainMenu(Socket server, GameModeType mode){
+        QueueProvider.startMessenger(mode, server);
     }
 
     public MainMenu() {
@@ -61,70 +60,69 @@ public class MainMenu extends Menus implements Runnable {
 
     private static boolean testOption(MenuItem m) throws DeathException {
         String key = m.getKey();
-        if(key.equals("start")) {
-            try {
-                Path orig = Paths.get("json/original_data/locations.json");
-                Path dest = Paths.get("json/locations.json");
-                Files.copy(orig, dest, StandardCopyOption.REPLACE_EXISTING);
-            } catch (IOException ex) {
-                QueueProvider.offer("Unable to load new locations file.");
-                ex.printStackTrace();
-            }
-            new ChooseClassMenu();
-        }
-        else if(key.equals("exit")) {
-            QueueProvider.offer("Goodbye!");
-            return false;
-        }
-        else if(key.equals("load")) {
-            listProfiles();
-            QueueProvider.offer("\nWhat is the name of the avatar you want to load? Type 'back' to go back");
-            Player player = null;
-
-            boolean exit = false;
-            while (player == null) {
-                key = QueueProvider.take();
-                if (Player.profileExists(key)) {
-                    player = Player.load(key);
-                } else if (key.equals("exit") || key.equals("back")) {
-                    exit = true;
-                    break;
-                } else {
-                    QueueProvider.offer("That user doesn't exist. Try again.");
+        switch (key){
+            case "start":
+                try {
+                    Path orig = Paths.get("json/original_data/locations.json");
+                    Path dest = Paths.get("json/locations.json");
+                    Files.copy(orig, dest, StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException ex) {
+                    QueueProvider.offer("Unable to load new locations file.");
+                    ex.printStackTrace();
                 }
-            }
-
-            if (exit) {
-                return true;
-            }
-
-            Game game = new Game(player, "old");
-        } else if (key.equals("delete")) {
-            listProfiles();
-            QueueProvider.offer("\nWhich profile do you want to delete? Type 'back' to go back");
-            boolean exit = false;
-            while (!exit) {
-                key = QueueProvider.take();
-                if (Player.profileExists(key)) {
-                    String profileName = key;
-                    QueueProvider.offer("Are you sure you want to delete " + profileName + "? y/n");
+                new ChooseClassMenu();
+                break;
+            case "exit":
+                QueueProvider.offer("Goodbye!");
+                return false;
+            case "load":
+                listProfiles();
+                QueueProvider.offer("\nWhat is the name of the avatar you want to load? Type 'back' to go back");
+                Player player = null;
+                boolean exit = false;
+                while (player == null) {
                     key = QueueProvider.take();
-                    if (key.equals("y")) {
-                        File profile = new File("json/profiles/" + profileName);
-                        deleteDirectory(profile);
-                        QueueProvider.offer("Profile Deleted");
-                        return true;
+                    if (Player.profileExists(key)) {
+                        player = Player.load(key);
+                    } else if (key.equals("exit") || key.equals("back")) {
+                        exit = true;
+                        break;
                     } else {
-                        listProfiles();
-                        QueueProvider.offer("\nWhich profile do you want to delete?");
+                        QueueProvider.offer("That user doesn't exist. Try again.");
                     }
-                } else if (key.equals("exit") || key.equals("back")) {
-                    exit = true;
-                    break;
-                } else {
-                    QueueProvider.offer("That user doesn't exist. Try again.");
                 }
-            }
+                if (exit) {
+                    return true;
+                }
+                new Game(player, "old");
+                break;
+            case "delete":
+                listProfiles();
+                QueueProvider.offer("\nWhich profile do you want to delete? Type 'back' to go back");
+                exit = false;
+                while (!exit) {
+                    key = QueueProvider.take();
+                    if (Player.profileExists(key)) {
+                        String profileName = key;
+                        QueueProvider.offer("Are you sure you want to delete " + profileName + "? y/n");
+                        key = QueueProvider.take();
+                        if (key.equals("y")) {
+                            File profile = new File("json/profiles/" + profileName);
+                            deleteDirectory(profile);
+                            QueueProvider.offer("Profile Deleted");
+                            return true;
+                        } else {
+                            listProfiles();
+                            QueueProvider.offer("\nWhich profile do you want to delete?");
+                        }
+                    } else if (key.equals("exit") || key.equals("back")) {
+                        exit = true;
+                        break;
+                    } else {
+                        QueueProvider.offer("That user doesn't exist. Try again.");
+                    }
+                }
+                break;
         }
         return true;
     }

@@ -1,33 +1,43 @@
 package com.jadventure.game.navigation;
 
-import com.jadventure.game.items.Item;
-import com.jadventure.game.items.ItemStack;
-import com.jadventure.game.entities.NPC;
-import com.jadventure.game.monsters.Monster;
-
+import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
+
+import com.jadventure.game.entities.NPC;
+import com.jadventure.game.items.Item;
+import com.jadventure.game.items.Storage;
+import com.jadventure.game.monsters.Monster;
 
 /**
  * This interface maps all the properties and methods that 
  * pertain to a specific location.
  */
 public interface ILocation {
-    public Coordinate getCoordinate();
-    public String getTitle();
-    public String getDescription();
-    public LocationType getLocationType();
-    public Map<Direction, ILocation> getExits();
-    public ArrayList<Item> getItems();
-    public ArrayList<NPC> getNPCs();
-    public void removePublicItem(String itemID);
-    public void addPublicItem(String itemID);
-    public void addPublicItems(ArrayList<ItemStack> items);
-    public void addMonster(Monster monster);
-    public void removeMonster(Monster monster);
-    public ArrayList<Monster> getMonsters();
-    public void print();
-    public int getDangerRating();
-    public void setDangerRating(int dangerRating);
+    Coordinate getCoordinate();
+    String getTitle();
+    String getDescription();
+    LocationType getLocationType();
+
+    List<Item> getItems();
+    Storage getStorage();
+
+    void addItem(Item item);
+    Item removeItem(Item item);
+
+    List<NPC> getNpcs();
+    List<Monster> getMonsters();
+
+    void addMonster(Monster monster);
+    void removeMonster(Monster monster);
+
+    void addNpcs(List<String> npcIds);
+    void addNpc(String npcID);
+    void removeNpc(NPC npc);
+
+    int getDangerRating();
+    void setDangerRating(int dangerRating);
+
+    Map<Direction, ILocation> getExits();
+    void print();
 }
 

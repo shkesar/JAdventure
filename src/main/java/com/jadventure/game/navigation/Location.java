@@ -1,31 +1,48 @@
 package com.jadventure.game.navigation;
 
-import com.jadventure.game.items.Item;
-import com.jadventure.game.items.ItemStack;
-import com.jadventure.game.entities.NPC;
-import com.jadventure.game.monsters.Monster;
-import com.jadventure.game.QueueProvider;
-
-import java.util.HashMap;
-import java.util.Map;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.jadventure.game.GameBeans;
+import com.jadventure.game.QueueProvider;
+import com.jadventure.game.entities.NPC;
+import com.jadventure.game.items.Item;
+import com.jadventure.game.items.Storage;
+import com.jadventure.game.monsters.Monster;
+import com.jadventure.game.repository.ItemRepository;
+import com.jadventure.game.repository.LocationRepository;
+import com.jadventure.game.repository.NpcRepository;
+import com.jadventure.game.repository.RepositoryException;
 
 /**
  * The location class mostly deals with getting and setting variables.
  * It also contains the method to print a location's details.
  */
 public class Location implements ILocation {
+    // @Resource
+    protected static ItemRepository itemRepo = GameBeans.getItemRepository();
+    protected static NpcRepository npcRepo = GameBeans.getNpcRepository();
+
     private Coordinate coordinate;
     private String title;
     private String description;
     private LocationType locationType;
     private int dangerRating;
-    private ArrayList<String> items;
-    private ArrayList<String> npcs;
-    private ArrayList<Monster> monsters = new ArrayList<>();
+    private Storage storage = new Storage();
+    private List<NPC> npcs = new ArrayList<>();
+    private List<Monster> monsters = new ArrayList<>();
 
     public Location() {
 
+    }
+    public Location(Coordinate coordinate, String title, String description, LocationType locationType) {
+        this.coordinate = coordinate;
+        this.title = title;
+        this.description = description;
+        this.locationType = locationType;
     }
 
     public Coordinate getCoordinate() {
@@ -72,50 +89,55 @@ public class Location implements ILocation {
     public Map<Direction, ILocation> getExits() {
         Map<Direction, ILocation> exits = new HashMap<Direction, ILocation>();
         ILocation borderingLocation;
+        LocationRepository locationRepo = GameBeans.getLocationRepository();
         for(Direction direction: Direction.values()) {
-            borderingLocation = LocationManager.getLocation(getCoordinate().getBorderingCoordinate(direction));
-            if (borderingLocation != null) {
+            try {
+                borderingLocation = locationRepo.getLocation(getCoordinate().getBorderingCoordinate(direction));
                 if (borderingLocation.getCoordinate().getZ() == getCoordinate().getZ()) {
                     exits.put(direction, borderingLocation);
                 } else if (getLocationType().equals(LocationType.STAIRS)) {
                     exits.put(direction, borderingLocation);
                 }
-            } 
+            }
+            catch (RepositoryException ex) {
+                //Location does not exist so do nothing
+            }
         }
         return exits;
     }
 
-    public void setItems(ArrayList<String> items) {
-        this.items = items;
+    public Storage getStorage() {
+        return storage;
+    }
+    public List<Item> getItems() {
+        return storage.getItems();
     }
 
-    public ArrayList<Item> getItems() {
-        ArrayList<Item> items = new ArrayList<>();
-        for (String itemId : this.items) {
-            Item itemName = new Item(itemId);
-            items.add(itemName);
+    public void addNpcs(List<String> npcIds) {
+        for (String npcId : npcIds) {
+            addNpc(npcId);
+        } 
+    }
+    
+    public void addNpc(String npcId) {
+        npcs.add( npcRepo.getNpc(npcId) );
+    }
+
+    public void removeNpc(NPC npc) {
+        for (int i = 0; i < npcs.size(); i++) {
+            if (npcs.get(i).equals(npc)) {
+                npcs.remove(i);
+            }
         }
-        return items;
     }
 
-    public void setNPCs(ArrayList<String> npcs) {
-        this.npcs = npcs;
+    public List<NPC> getNpcs() {
+        return Collections.unmodifiableList(npcs);
     }
 
-    public ArrayList<NPC> getNPCs() {
-        ArrayList<NPC> npcs = new ArrayList<>();
-        for (String npcID : this.npcs) {
-            NPC npc = new NPC(npcID);
-            npcs.add(npc);
-        }
-        return npcs;
-    }
-   
     public void addMonster(Monster monster) {
         if (monster != null) {
-            ArrayList<Monster> list = this.monsters;
-            list.add(monster);
-            this.monsters = list;
+            monsters.add(monster);
         }
     }
 
@@ -126,41 +148,30 @@ public class Location implements ILocation {
             }
         }
     }
-
-    public ArrayList<Monster> getMonsters() {
-        return this.monsters;
+    
+    public List<Monster> getMonsters() {
+        return monsters;
     }
 
-    public void removePublicItem(String itemID) {
-        ArrayList<String> items = this.items;
-        items.remove(itemID);
-        setItems(items);
+    public Item removeItem(Item item) {
+        return storage.remove(item);
     }
 
-    public void addPublicItem(String itemID) {
-        ArrayList<String> items = this.items;
-        items.add(itemID);
-        setItems(items);
-    }
-
-    public void addPublicItems(ArrayList<ItemStack> items) {
-        for (int i = 0; i < items.size(); i++) {
-            String itemID = items.get(i).getItem().getItemID();
-            addPublicItem(itemID);
-        }
+    public void addItem(Item item) {
+        storage.add(item);
     }
 
     public void print() {
-        QueueProvider.offer(getTitle() + ":");
+        QueueProvider.offer("\n" + getTitle() + ":");
         QueueProvider.offer("    " + getDescription());
-        ArrayList<Item> publicItems = getItems();
-        if (!publicItems.isEmpty()) {
+        List<Item> items = getItems();
+        if (!items.isEmpty()) {
             QueueProvider.offer("Items:");
-            for (Item item : publicItems) {
+            for (Item item : items) {
                 QueueProvider.offer("    " + item.getName());
             }
         }
-        ArrayList<NPC> npcs = getNPCs();
+        List<NPC> npcs = getNpcs();
         if (!npcs.isEmpty()) {
             QueueProvider.offer("NPCs:");
             for (NPC npc : npcs) {
@@ -172,6 +183,5 @@ public class Location implements ILocation {
 		QueueProvider.offer(direction.getKey().getDescription() + ": ");
     		QueueProvider.offer("    " + direction.getValue().getDescription());
         }
-        QueueProvider.offer("");
     }
 }
